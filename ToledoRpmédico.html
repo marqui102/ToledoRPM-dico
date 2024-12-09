@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Médico</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+            font-size: 12px;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-container input,
+        .form-container select,
+        .form-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            background-color: #f9f9f9;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Informe Médico</h1>
+
+    <div class="form-container">
+        <form id="medicoForm">
+            <div class="section-title">Datos del Paciente</div>
+            <label for="service">Servicio:</label>
+            <select id="service" required>
+                <option value="Emergencias">Emergencias</option>
+                <option value="Consulta">Consulta</option>
+            </select>
+            <label for="name">Nombre y Apellidos:</label>
+            <input type="text" id="name" required>
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" required>
+            <label for="room">Habitación nº:</label>
+            <input type="number" id="room" required>
+            <label for="hour">Hora:</label>
+            <input type="time" id="hour" required>
+            <label for="age">Edad:</label>
+            <input type="number" id="age" required>
+            <label for="dni">DNI:</label>
+            <input type="text" id="dni" required>
+            <label for="gender">Género:</label>
+            <select id="gender" required>
+                <option value="Hombre">Hombre</option>
+                <option value="Mujer">Mujer</option>
+                <option value="Otro">Otro</option>
+            </select>
+            <label for="reason">Motivo de consulta:</label>
+            <textarea id="reason" required></textarea>
+            <label for="justification">Tipo de documento:</label>
+            <select id="justification" required>
+                <option value="Justificante">Justificante</option>
+                <option value="Acta médica">Acta médica</option>
+                <option value="Acciones Legales">Acciones Legales</option>
+            </select>
+            <label for="diagnosis">Diagnóstico:</label>
+            <textarea id="diagnosis" required></textarea>
+            <label for="treatment">Tratamiento Médico:</label>
+            <textarea id="treatment" required></textarea>
+            <button type="button" onclick="generatePDF()">Generar Informe PDF</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const service = document.getElementById("service").value;
+            const name = document.getElementById("name").value;
+            const date = document.getElementById("date").value;
+            const room = document.getElementById("room").value;
+            const hour = document.getElementById("hour").value;
+            const age = document.getElementById("age").value;
+            const dni = document.getElementById("dni").value;
+            const gender = document.getElementById("gender").value;
+            const reason = document.getElementById("reason").value;
+            const justification = document.getElementById("justification").value;
+            const diagnosis = document.getElementById("diagnosis").value;
+            const treatment = document.getElementById("treatment").value;
+
+            if (!service || !name || !date || !room || !hour || !age || !dni || !gender || !reason || !justification || !diagnosis || !treatment) {
+                alert("Por favor, complete todos los campos antes de generar el PDF.");
+                return;
+            }
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+
+            // Encabezado
+            doc.text("Hospital de Toledo RP", 30, 20);
+            doc.addImage("https://media.discordapp.net/attachments/1048673334600142849/1315743458513915934/toledrp-removebg-preview.png?ex=67588515&is=67573395&hm=3a97a6c838bf8b3f6da5d2f85bd4347e578740536d6d5285ef8ce1469752ff4f&=&format=webp&quality=lossless&width=302&height=302", "PNG", 150, 10, 30, 30);
+
+            doc.setFont("helvetica", "bold");
+            doc.setTextColor(76, 175, 80);  // Verde para el título y subtítulo
+            doc.text("INFORME MÉDICO", 105, 50, null, null, 'center');
+            doc.text("Servicio de " + service, 105, 60, null, null, 'center');
+            
+            doc.setTextColor(0, 0, 0);  // Volver a negro para el resto del texto
+            
+            // Línea de separación
+            doc.line(20, 70, 190, 70);
+
+            // Datos del paciente
+            doc.setFont("helvetica", "bold");
+            doc.text("Datos del Paciente", 20, 80);
+            doc.setFont("helvetica", "normal");
+            doc.text("· Nombre y Apellidos: " + name, 20, 90);
+            doc.text("· Edad: " + age, 20, 100);
+            doc.text("· Género: " + gender, 20, 110);
+            doc.text("· DNI: " + dni, 20, 120);
+
+            // Motivo de consulta
+            doc.setFont("helvetica", "bold");
+            doc.text("Motivo de Consulta", 20, 130);
+            doc.setFont("helvetica", "normal");
+            doc.text("· Motivo: " + reason, 20, 140);
+            doc.text("· Fin: " + justification, 20, 150);
+
+            // Diagnóstico
+            doc.setFont("helvetica", "bold");
+            doc.text("Diagnóstico", 20, 160);
+            doc.setFont("helvetica", "normal");
+            doc.text("· " + diagnosis, 20, 170);
+
+            // Tratamiento Médico
+            doc.setFont("helvetica", "bold");
+            doc.text("Tratamiento Médico", 20, 180);
+            doc.setFont("helvetica", "normal");
+            doc.text("· " + treatment, 20, 190);
+
+            // Fecha y firma 
+            const formattedDate = new Date(date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            doc.text("Toledo, " + formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1), 105, 200, null, null, 'center');
+            doc.text("Firma Médico:", 20, 210);
+            doc.line(20, 260, 190, 260); // Línea para firma
+
+            // Guardar PDF
+            doc.save("informe_medico.pdf");
+        }
+    </script>
+
+</body>
+</html>
